@@ -1,38 +1,311 @@
-.App {
-  text-align: center;
+* {
+  box-shadow: 0 0 0 1px rgba(255,0,0,0.1);
+}
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Remove default padding */
+ul[class],
+ol[class] {
+  padding: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* Remove list styles on ul, ol elements with a class attribute */
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Natural flow and rhythm in articles by default */
+article > * + * {
+  margin-top: 1em;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations and transitions for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+
+.page {
+  --grid-unit: 8px;
+  --primary-color: #0066cc;
+  --panel-width: 320px;
+  --margin: 16px;
+  position: absolute;
+  width:100%;
+  height: 100%;
+  font-family: sans-serif;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  overflow: hidden;
+}
+
+
+.main {
+  position: absolute;
+  width:100%;
+  height: 100%;
+  top:0;
+  left:0;
+  background: #eff;
+  z-index:1;
+  transition: transform 0.2s ease-in-out, 
+              width 0.2s ease-in-out;
+
+}
+.page.panel-group-left .main {
+  width: calc(100% - var(--panel-width));
+  transform: translateX(var(--panel-width));
+}
+.page.panel-group-right .main {
+  width: calc(100% - var(--panel-width));
+  transform: translateX(0);
+}
+.page.panel-group-right.panel-group-left .main {
+
+}
+
+.main .controls {
+  margin:auto;
+  width: 360px;
+}
+
+.ui {
+  
+}
+
+/** 
+ * HELPERS 
+ * -----
+ * Helper classes to assist with layout and positioning
+ */
+.ui.align-end {
+  justify-content: space-between;
+}
+
+/** 
+ * CONTAINER 
+ * -----
+ * containers are used for grouping components
+ * similar to rows and columns but more general
+ */
+.ui.container {
+  padding: calc(2 * var(--grid-unit));
+  flex: 1;
+}
+.ui.container .row {
+  padding: 0;
+}
+
+/** 
+ * ROWS 
+ * -----
+ * Rows are used to layout components horizontally
+ */
+.ui.row {
+  display: flex;
+  align-items: center;
+  padding: 0 calc(2 * var(--grid-unit));
+  margin:0;
+}
+  /** do not pad nested rows */
+  .ui.row .row { 
+    padding: 0; 
+  }
+  /** rows of various heights by grid unit size */
+  .ui.row-1 { height: calc(1 * var(--grid-unit)); }
+  .ui.row-2 { height: calc(2 * var(--grid-unit)); }
+  .ui.row-3 { height: calc(3 * var(--grid-unit)); }
+  .ui.row-4 { height: calc(4 * var(--grid-unit)); }
+  .ui.row-5 { height: calc(5 * var(--grid-unit)); }
+  .ui.row-6 { height: calc(6 * var(--grid-unit)); }
+  .ui.row-7 { height: calc(7 * var(--grid-unit)); }
+  .ui.row-8 { height: calc(8 * var(--grid-unit)); }
+  /** extend a components to the edges of the containing row */
+  .ui.row .extend {
+    padding: 0 calc(2 * var(--grid-unit));
+    margin:0 calc(-2 * var(--grid-unit));
+  }
+  .ui.row .extend:first-child {
+    margin-top: calc(-2 * var(--grid-unit));
+  }
+
+
+/** 
+ * BUTTONS 
+ * -----
+ * Styles for button components
+ */
+button, .button {
+  padding: 8px 16px;
+  line-height: 1;
+  margin:0;
+  background: var(--primary-color);
+  color: #fff;
+  border:none;
+  font-weight: bold;
+  font-size: 1em;
+  text-transform: uppercase;
+}
+.button.text {
+  padding: 0;
+  background: none;
+  color: var(--primary-color);
+}
+
+
+/**
+ * PANEL GROUP
+ * -----
+ * panel groups are used for organizing multiple panels
+ */
+.panel-group {
+  position: absolute;
+  width: var(--panel-width);
+  z-index: 10;
+  transition: transform 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow: auto;
+}
+  
+  /** left panel */
+  .panel-group.left {
+    transform: translate3d(-107%,0,0);
+    top: calc(2 * var(--grid-unit));
+    left: calc(2 * var(--grid-unit));
+    bottom: calc(2 * var(--grid-unit));
+    right: auto;
+  }
+  .panel-group.left.docked {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: auto;
+  }
+  .panel-group.open.left {
+    transform: translate3d(0,0,0);
+  }
+
+  /** right panel */
+  .panel-group.right {
+    transform: translate3d(107%,0,0);
+    top: calc(2 * var(--grid-unit));
+    right: calc(2 * var(--grid-unit));
+    bottom: calc(2 * var(--grid-unit));
+    left: auto;
+  }
+  .panel-group.right.docked {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+  }
+  .panel-group.open.right {
+    transform: translate3d(0,0,0);
+  }
+
+  .panel-group.docked .panel {
+    margin-bottom: 0;
+  }
+
+/**
+ * PANEL
+ * -----
+ **/
+.panel {
+  min-width: var(--panel-width);
+  width:100%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15), 0 0 2px rgba(0,0,0,0.1);
+  margin-bottom: var(--grid-unit);
+}
+.panel:last-child {
+  margin-bottom: 0;
+}
+.panel-group:not(.docked) .panel.collapsed + .panel.collapsed {
+  margin-top: calc(-1 * var(--grid-unit));
+}
+.panel.top {
+  position: sticky;
+  top:0;
+}
+.panel.bottom {
+  position: sticky;
+  bottom:0;
+  margin-top:auto!important;
+}
+.panel .title {
+  background: #eee;
+  border-bottom: 1px solid #ccc;
 }
 
-.App-link {
-  color: #61dafb;
+.panel .title .text {
+  font-size: 1em;
+  line-height: 1;
+  margin:0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.panel__body {
+  padding: 16px;
 }
+
+
